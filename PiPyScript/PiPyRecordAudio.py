@@ -15,7 +15,7 @@ nchannels = 1
 sampwidth = 2
 # 44100 is the industry standard sample rate - CD quality.
 sample_rate = 44100
-nframes = CHUNK * 10
+nframes = CHUNK * 80
 comptype = "NONE"
 compname = "not compressed"
 wf.setparams((nchannels, sampwidth, sample_rate, nframes, comptype, compname))
@@ -30,7 +30,7 @@ stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
                 input=True)
 
 # read from stream (3)
-for i in range(10):
+for i in range(80):
     data = stream.read(CHUNK)
     wf.writeframes(data)
 
