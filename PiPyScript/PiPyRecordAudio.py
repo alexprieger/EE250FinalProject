@@ -29,10 +29,13 @@ stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
                 rate=wf.getframerate(),
                 input=True)
 
+recordedframes = []
 # read from stream (3)
 for i in range(80):
     data = stream.read(CHUNK)
-    wf.writeframes(data)
+    recordedframes.append(data)
+
+wf.writeframes(b''.join(recordedframes))
 
 # stop stream (4)
 stream.stop_stream()
