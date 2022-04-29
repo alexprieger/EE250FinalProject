@@ -23,6 +23,8 @@ wf.setparams((nchannels, sampwidth, sample_rate, nframes, comptype, compname))
 # instantiate PyAudio (1)
 p = pyaudio.PyAudio()
 
+print(p.get_default_input_device_info())
+
 # open stream (2)
 stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
                 channels=wf.getnchannels(),
