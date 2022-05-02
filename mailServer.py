@@ -5,8 +5,9 @@ from flask import request
 import argparse
 import json
 import mailboxManager
+import decode
 
-app = Flask('RaspberryPi Mailbox Server')
+app = Flask('RaspberryPi Doorbell Server')
 
 """
 The @app.route() above the function is called a decorator. We will skip
@@ -18,35 +19,21 @@ if __name__ == '__main__':, this first callback is set to be specifically
 called when a GET request is sent to the URL "http://0.0.0.0:[port]/mailbox"
 """
 
-@app.route('/mailbox', methods=['GET'])
-def get_mailbox_callback():
+@app.route('/doorbell', methods=['GET'])
+def get_doorbell_callback():
     """
     Summary: A callback which for when GET is called on [host]:[port]/mailbox
     Returns:
         string: A JSON-formatted string containing the response message
     """
-
+    print('DOORBELL')
+    response = {"opens" : decode.main('keyTone.wav')}
     # Since we have `from flask import request` above, the 'request' object
     # will (magically) be available when the callback is called. `request` is
     # the object that stores all the HTTP message data (header, payload, etc.).
     # We will skip explaining how this object gets here because the answer is
     # a bit long and out of the scope of this lab.
-
-    # Extract the key/value field for password
-    password = request.args.get('password')
-
-    # Check that the password is valid
-    if password == mailbox_password:
-        # Use Flask's jsonify function to format the dictionary as JSON
-        response = jsonify(mailbox_manager.get_mail())
-
-    else:
-        if password == None:
-            response = jsonify({'Response': 'Missing password'})
-
-        else:
-            response = jsonify({'Response': 'Password does not match'})
-
+    #status = decode.main(fileName)
     # The object returned will be sent back as an HTTP message to the requester
     return response
 
