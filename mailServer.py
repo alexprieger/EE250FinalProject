@@ -6,6 +6,7 @@ import argparse
 import json
 import mailboxManager
 import decode
+import wave
 
 app = Flask('RaspberryPi Doorbell Server')
 
@@ -19,15 +20,27 @@ if __name__ == '__main__':, this first callback is set to be specifically
 called when a GET request is sent to the URL "http://0.0.0.0:[port]/mailbox"
 """
 
-@app.route('/doorbell', methods=['GET'])
+@app.route('/doorbell', methods=['POST'])
 def get_doorbell_callback():
     """
     Summary: A callback which for when GET is called on [host]:[port]/mailbox
     Returns:
         string: A JSON-formatted string containing the response message
     """
+    
     print('DOORBELL')
-    response = {"opens" : decode.main('keyTone.wav')}
+    data = request.data
+    print(data)
+    newWave = wave.open('toneKey.wav', mode='wb')
+    #f = open('toneKey.wav', 'w')
+    #f.write(file)
+    
+    newWave.setparams((1,2,44100,0,'NONE', 'not compressed'))
+    newWave.writeframes(data)
+    
+    response = {"opens" : decode.main('toneKey.wav')}
+
+    
     # Since we have `from flask import request` above, the 'request' object
     # will (magically) be available when the callback is called. `request` is
     # the object that stores all the HTTP message data (header, payload, etc.).
