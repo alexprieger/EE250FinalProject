@@ -1,10 +1,10 @@
 import sys
-
-sys.path.append('Python')
-
-import grovepi
 import time
 import subprocess
+
+# Allow importing grovepi
+sys.path.append('Python')
+import grovepi
 
 if len(sys.argv) < 3:
     print("Records a wave file to the specified location on a button press.\n\nUsage: %s <filename>.wav <button_port>" % sys.argv[0])
