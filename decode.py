@@ -129,7 +129,7 @@ def main(file):
     #print(start_index/sample_rate)
     i = 1
     num_idx = 0
-    while (i < 5):#end_index < len(samples):
+    while i < 5: #end_index < len(samples):
         #print("Sample {}:".format(i))
         i += 1
         #print(str(start_index/sample_rate) + ' - ' +str(end_index/sample_rate)) 
