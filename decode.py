@@ -7,8 +7,8 @@ import sys
 #http://dialabc.com/sound/generate/index.html?pnum=1234&auFormat=wavpcm44&toneLength=300&mtcontinue=Generate+DTMF+Tones
 
 MAX_FRQ = 2000
-SLICE_SIZE = 0.15 #seconds
-WINDOW_SIZE = 0.175 #seconds
+#SLICE_SIZE = 0.07 #seconds
+#WINDOW_SIZE = 0.175 #seconds
 
 # TODO: implement this dictionary              
 LOWER_FRQS = [697, 770, 852, 941]
@@ -40,14 +40,16 @@ def get_max_frq(frq, fft):
 
 def get_peak_frqs(frq, fft):
     #TODO: implement an algorithm to find the two maximum values in a given array
-
+    print('frq len')
+    print(len(frq))
+    
     #get the high and low frequency by splitting it in the middle (1000Hz)
-    low_frq = frq[90:150]
+    low_frq = frq[90:150]   #old vals 90-150
     low_frq_fft = fft[90:150]
     print("low_frq : " + str(frq[90]) + " - " + str(frq[150]))
 
-    high_frq = frq[150:300]
-    high_frq_fft = fft[150:300] 
+    high_frq = frq[150:300]     #old vals 150-300
+    high_frq_fft = fft[150:300]
     print(len(frq))
     print("high_frq : " + str(frq[150]) + " - " + str(frq[299]))   
     #spliting the FFT to high and low frequencies
@@ -72,20 +74,21 @@ def get_number_from_frq(lower_frq, higher_frq):
 
 def main(file):
     print("Importing {}".format(file))
-    audio = AudioSegment.from_mp3(file)
+    audio = AudioSegment.from_wav(file)
 
     sample_count = audio.frame_count()
-    sample_rate = audio.frame_rate * 2
+    sample_rate = audio.frame_rate * 1
     samples = audio.get_array_of_samples()
     
     print("Number of channels: " + str(audio.channels))
     print("Sample count: " + str(sample_count))
     print("Sample rate: " + str(sample_rate))
     print("Sample width: " + str(audio.sample_width))
+    print('Length of samples tuple ' + str(len(samples)))
 
     period = 1/sample_rate                     #the period of each sample
     duration = sample_count/sample_rate         #length of full audio in seconds
-    SLICE_SIZE = 0.150  #seconds
+    SLICE_SIZE = 0.15  #seconds
     WINDOW_SIZE = 0.175 #seconds
     slice_sample_size = int(SLICE_SIZE*sample_rate)   #get the number of elements expected for [SLICE_SIZE] seconds
 
@@ -101,8 +104,10 @@ def main(file):
 
     search = 0
     while (search < sample_count):
-        if(abs(samples[search]) > 1500):
+        if(abs(samples[search]) > 20000):
+            print('----------\nstarting point')
             print(search)
+            print(samples[search])
             print(search * sample_rate)
             break
         search+=1
@@ -113,6 +118,8 @@ def main(file):
     output = ''
     print('start index')
     print(start_index)
+    print('start time')
+    print(start_index/sample_rate)
     i = 1
     num_idx = 0
     while (i < 5):#end_index < len(samples):
@@ -141,13 +148,18 @@ def main(file):
         #print('Corresponding number : ' + str(output))
         #Incrementing the start and end window for FFT analysis
         print(i)
-        if(i > 2):
-            WINDOW_SIZE = 0.35
-            SAMPLE_SIZE = 0.3
+        if(i > 1):
+            WINDOW_SIZE = 0.305
+            SLICE_SIZE = 0.15
+            print('----------')
+            print(WINDOW_SIZE)
+            print(SLICE_SIZE)
+            print('----------')
         start_index += int(WINDOW_SIZE*sample_rate)
         slice_sample_size = int(SLICE_SIZE*sample_rate)
         
         end_index = start_index + slice_sample_size
+        #print(str(start_index/sample_rate) + ' - ' +str(end_index/sample_rate)) 
 
     #print("Program completed")
     print("Decoded input: " + str(output))

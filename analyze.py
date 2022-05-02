@@ -11,12 +11,13 @@ SLICE_SIZE = 0.15
 def main(start_time, file):
     
     print("Importing {}".format(file))
-    audio = AudioSegment.from_mp3(file)
+    audio = AudioSegment.from_wav(file)
 
     sample_count = audio.frame_count()
-    sample_rate = audio.frame_rate * 2
+    sample_rate = audio.frame_rate 
+    print('start time')
     print(start_time * sample_rate)
-    print(104451/(sample_rate))
+    print(125685/(sample_rate))
     print(125026/(sample_rate/2))
 
     print("Number of channels: " + str(audio.channels))
@@ -27,8 +28,9 @@ def main(start_time, file):
     """***********************FULL SAMPLE PLOT**************************"""
     samples = audio.get_array_of_samples()
     period = 1/sample_rate                  #the period of each sample
-    duration = sample_count/sample_rate     #length of full audio in seconds
-    time = np.arange(0, duration*2, period)   #generate a array of time values from 0 to [duration] with step of [period]
+    duration = sample_count/sample_rate 
+    print('duration : ' + str(duration))    #length of full audio in seconds
+    time = np.arange(0, duration, period)   #generate a array of time values from 0 to [duration] with step of [period]
     print('time size')
     print(len(time))
     print('samples size')
