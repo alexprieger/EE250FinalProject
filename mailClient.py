@@ -1,9 +1,13 @@
+import requests
+import json
+
 def main():
     headers = {
         'Content-Type': 'application/json',
         'Authorization': None   # not using HTTP secure
     }
 
+    filecontents = 0
     # The payload of our message starts as a simple dictionary. Before sending
     # the HTTP message, we will format this into a JSON object
     payload = {
