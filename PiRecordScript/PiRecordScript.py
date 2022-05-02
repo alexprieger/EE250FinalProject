@@ -6,6 +6,7 @@ import pyaudio
 import wave
 import grovepi
 import time
+import subprocess
 
 CHUNK = 1024
 
@@ -16,6 +17,7 @@ if len(sys.argv) < 3:
 # Used for simple debouncing - if the button is held for two ticks, initiate recording
 last_tick_pressed = False
 
+filename = sys.argv[1]
 button_port = int(sys.argv[2])
 
 # instantiate PyAudio
@@ -23,7 +25,7 @@ p = pyaudio.PyAudio()
 
 def record_audio():
     global last_tick_pressed
-    wf = wave.open(sys.argv[1], 'wb')
+    wf = wave.open(filename + ".wav", 'wb')
         
     # wav params
     nchannels = 1
@@ -52,6 +54,10 @@ def record_audio():
     # stop stream
     stream.stop_stream()
     stream.close()
+
+    # convert from wav to mp3
+    subprocess.call("ffmpeg -i %s.wav %s.mp3" % (filename, filename), shell=True)
+    # subprocess.call("rm %s.wav" % filename, shell=True)
 
 # main body of program
 while True:
