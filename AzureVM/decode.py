@@ -4,6 +4,7 @@ from pydub import AudioSegment
 import os
 import sys
 
+# MAX_FRQ cannot be safely changed, because get_peak_frqs depends on this value staying 2000
 MAX_FRQ = 2000
 TONE_LENGTH = 0.1   #seconds
 STOP_LENGTH = 0.1   #seconds
@@ -35,11 +36,14 @@ def get_max_frq(frq, fft):
 
 def get_peak_frqs(frq, fft):
     #get the high and low frequency by splitting it in the middle (1000Hz)
-    low_frq = frq[:int(MAX_FRQ * TONE_LENGTH / 2)]
-    low_frq_fft = fft[:int(MAX_FRQ * TONE_LENGTH / 2)]
+    hz1000Idx = int(MAX_FRQ * TONE_LENGTH / 2)
+    hz650Idx = int(hz1000Idx * 65 / 100)
+    hz1500Idx = int(hz1000Idx * 150 / 100)
+    low_frq = frq[hz650Idx:hz1000Idx]
+    low_frq_fft = fft[hz650Idx:hz1000Idx]
 
-    high_frq = frq[int(MAX_FRQ * TONE_LENGTH / 2):]
-    high_frq_fft = fft[int(MAX_FRQ * TONE_LENGTH / 2):]
+    high_frq = frq[hz1000Idx:hz1500Idx]
+    high_frq_fft = fft[hz1000Idx:hz1500Idx]
 
     return (get_max_frq(low_frq, low_frq_fft), get_max_frq(high_frq, high_frq_fft))
 
