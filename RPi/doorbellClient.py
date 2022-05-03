@@ -12,6 +12,4 @@ def sendRecordingToServer(data):
                              headers=headers,
                              data=data)
 
-    print(response)
-
-    return 0
+    return response
