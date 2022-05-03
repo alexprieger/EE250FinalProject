@@ -49,7 +49,8 @@ while True:
             print("Recording audio")
             data = record_audio()
             print("Finished recording audio")
-            doorbellClient.sendRecordingToServer(data)
+            response = doorbellClient.sendRecordingToServer(data)
+            print(response.text)
         else:
             last_tick_pressed = True
     else:
