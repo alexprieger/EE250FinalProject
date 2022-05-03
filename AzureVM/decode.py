@@ -81,13 +81,12 @@ def main(file):
     sample_count = audio.frame_count()
     sample_rate = audio.frame_rate * 1
     samples = audio.get_array_of_samples()
-    '''
+
     print("Number of channels: " + str(audio.channels))
     print("Sample count: " + str(sample_count))
     print("Sample rate: " + str(sample_rate))
     print("Sample width: " + str(audio.sample_width))
     print('Length of samples tuple ' + str(len(samples)))
-    '''
 
     period = 1/sample_rate                     #the period of each sample
     duration = sample_count/sample_rate         #length of full audio in seconds
@@ -130,7 +129,7 @@ def main(file):
     i = 1
     num_idx = 0
     while i < 5: #end_index < len(samples):
-        #print("Sample {}:".format(i))
+        print("Sample %d, starting at frame %d and ending at frame %d:" % (i, start_index, end_index))
         i += 1
         #print(str(start_index/sample_rate) + ' - ' +str(end_index/sample_rate)) 
         #TODO: grab the sample slice and perform FFT on it
