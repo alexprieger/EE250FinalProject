@@ -52,10 +52,6 @@ def record_audio():
     stream.stop_stream()
     stream.close()
 
-    # convert from wav to mp3
-    subprocess.call("ffmpeg -i %s.wav %s.mp3" % (filename, filename), shell=True)
-    # subprocess.call("rm %s.wav" % filename, shell=True)
-
 # main body of program
 while True:
     if grovepi.digitalRead(button_port) == 1:
