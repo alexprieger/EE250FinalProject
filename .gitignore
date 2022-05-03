@@ -1,2 +1,3 @@
 *.pyc
 AzureVM/__pycache__
+AzureVM/toneKey.wav

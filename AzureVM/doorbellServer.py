@@ -14,10 +14,9 @@ def get_doorbell_callback():
     waveToStore.setparams((1, 2, 44100, 0, 'NONE', 'not compressed'))
     waveToStore.writeframes(data)
     
-    response = {"opens" : decode.main('toneKey.wav')}
+    response = {"opens" : decode.main('toneKey.wav', '1234')}
 
     return response
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=80)
-
