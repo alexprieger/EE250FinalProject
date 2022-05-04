@@ -3,6 +3,8 @@ import pyaudio
 import grovepi
 import time
 import doorbellClient
+import json
+import gpiozero
 
 CHUNK = 1024
 
@@ -50,7 +52,14 @@ while True:
             data = record_audio()
             print("Finished recording audio")
             response = doorbellClient.sendRecordingToServer(data)
-            print(response.text)
+            responseDict = json.loads(str(response.text))
+            if(responseDict['opens']):
+                print('opening')
+                gpiozero.LED(11).on()
+                time.sleep(10)
+                gpiozero.LED(11).off()
+            else:
+                print('access denied')
         else:
             last_tick_pressed = True
     else:
