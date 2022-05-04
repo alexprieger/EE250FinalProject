@@ -4,6 +4,7 @@ from pydub import AudioSegment
 import os
 import sys
 
+# MAX_FRQ cannot be safely changed, because get_peak_frqs depends on this value staying 2000
 MAX_FRQ = 2000
 TONE_LENGTH = 0.1   #seconds
 STOP_LENGTH = 0.1   #seconds
@@ -35,11 +36,14 @@ def get_max_frq(frq, fft):
 
 def get_peak_frqs(frq, fft):
     #get the high and low frequency by splitting it in the middle (1000Hz)
-    low_frq = frq[:int(MAX_FRQ * TONE_LENGTH / 2)]
-    low_frq_fft = fft[:int(MAX_FRQ * TONE_LENGTH / 2)]
+    hz1000Idx = int(MAX_FRQ * TONE_LENGTH / 2)
+    hz650Idx = int(hz1000Idx * 65 / 100)
+    hz1500Idx = int(hz1000Idx * 150 / 100)
+    low_frq = frq[hz650Idx:hz1000Idx]
+    low_frq_fft = fft[hz650Idx:hz1000Idx]
 
-    high_frq = frq[int(MAX_FRQ * TONE_LENGTH / 2):]
-    high_frq_fft = fft[int(MAX_FRQ * TONE_LENGTH / 2):]
+    high_frq = frq[hz1000Idx:hz1500Idx]
+    high_frq_fft = fft[hz1000Idx:hz1500Idx]
 
     return (get_max_frq(low_frq, low_frq_fft), get_max_frq(high_frq, high_frq_fft))
 
@@ -74,11 +78,13 @@ def main(file, key):
     sample_rate = audio.frame_rate * 1
     samples = audio.get_array_of_samples()
 
+    '''
     print("Number of channels: " + str(audio.channels))
     print("Sample count: " + str(sample_count))
     print("Sample rate: " + str(sample_rate))
     print("Sample width: " + str(audio.sample_width))
     print('Length of samples tuple ' + str(len(samples)))
+    '''
 
     period = 1 / sample_rate                     #the period of each sample
     duration = sample_count / sample_rate         #length of full audio in seconds
@@ -97,11 +103,9 @@ def main(file, key):
     while start_index <= sample_count - TONE_LENGTH: #end_index < len(samples):
         end_index = start_index + slice_sample_size      #find the ending index for the slice
 
-        print("Start index: %d, end index: %d" % (start_index, end_index))
         sample_slice = samples[start_index:end_index]
         sample_slice_fft = np.fft.fft(sample_slice)/slice_sample_size
         sample_slice_fft = sample_slice_fft[range(max_frq_idx)]
-        print("Max frq: %d, max frq index: %d" % (frq[max_frq_idx - 1], max_frq_idx))
         
         peaks = get_peak_frqs(frq, sample_slice_fft)
 
@@ -111,7 +115,7 @@ def main(file, key):
         
         start_index += int((TONE_LENGTH + STOP_LENGTH) * sample_rate)
 
-    print("Key: " + str(key) + " with type " + str(type(key)))
+    print("Key: " + str(key))
     print("Decoded input: " + str(output))
     if(is_sub(key, output)):
         return True
