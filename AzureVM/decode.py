@@ -78,11 +78,13 @@ def main(file, key):
     sample_rate = audio.frame_rate * 1
     samples = audio.get_array_of_samples()
 
+    '''
     print("Number of channels: " + str(audio.channels))
     print("Sample count: " + str(sample_count))
     print("Sample rate: " + str(sample_rate))
     print("Sample width: " + str(audio.sample_width))
     print('Length of samples tuple ' + str(len(samples)))
+    '''
 
     period = 1 / sample_rate                     #the period of each sample
     duration = sample_count / sample_rate         #length of full audio in seconds
@@ -101,11 +103,9 @@ def main(file, key):
     while start_index <= sample_count - TONE_LENGTH: #end_index < len(samples):
         end_index = start_index + slice_sample_size      #find the ending index for the slice
 
-        print("Start index: %d, end index: %d" % (start_index, end_index))
         sample_slice = samples[start_index:end_index]
         sample_slice_fft = np.fft.fft(sample_slice)/slice_sample_size
         sample_slice_fft = sample_slice_fft[range(max_frq_idx)]
-        print("Max frq: %d, max frq index: %d" % (frq[max_frq_idx - 1], max_frq_idx))
         
         peaks = get_peak_frqs(frq, sample_slice_fft)
 
@@ -115,7 +115,7 @@ def main(file, key):
         
         start_index += int((TONE_LENGTH + STOP_LENGTH) * sample_rate)
 
-    print("Key: " + str(key) + " with type " + str(type(key)))
+    print("Key: " + str(key))
     print("Decoded input: " + str(output))
     if(is_sub(key, output)):
         return True
