@@ -51,14 +51,17 @@ while True:
             print("Recording audio")
             data = record_audio()
             print("Finished recording audio")
-            response = doorbellClient.sendRecordingToServer(data)
-            responseDict = json.loads(str(response.text))
-            if(responseDict['opens']):
-                print('opening')
-                gpiozero.LED(11).on()
-                time.sleep(10)
-                gpiozero.LED(11).off()
-            else:
+            try:
+                response = doorbellClient.sendRecordingToServer(data) 
+                responseDict = json.loads(str(response.text))
+                if(responseDict['opens']):
+                    print('opening')
+                    gpiozero.LED(11).on()
+                    time.sleep(10)
+                    gpiozero.LED(11).off()
+                else:
+                    print('access denied')
+            except:
                 print('access denied')
         else:
             last_tick_pressed = True
