@@ -24,7 +24,11 @@ def get_doorbell_callback():
     waveToStore.setparams((1, 2, 44100, 0, 'NONE', 'not compressed'))
     waveToStore.writeframes(data)
 
-    shouldOpen = decode.main('audioMessage.wav', '1234567890')
+    try:
+        shouldOpen = decode.main('audioMessage.wav', '1234567890')
+    except:
+        print("Crashed in decode.py")
+        shouldOpen = False
 
     admitLock.acquire()
     timeout = False
